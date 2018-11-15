@@ -84,7 +84,7 @@ public class ShuntingYard {
                     if (infix.substring(j, j+1).equals(")")){
                         bCount ++;
                     }
-                    if (infix.substring(j, j+1).equals("(")){
+                    else if (infix.substring(j, j+1).equals("(")){
                         bCount --;
                     }
                     if (bCount == 0) {
