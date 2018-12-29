@@ -11,7 +11,7 @@ public class Graph extends JFrame {
     // The domain will be static at (-100, 100) and the range will not be defined.
     // This iteration's intention is to be a clean implementation, to be developed in the next.
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Input the equation");
         String s = sc.next();
@@ -32,7 +32,7 @@ public class Graph extends JFrame {
     private GeneralPath path;
     private boolean outBounds;
 
-    private Graph(String title){
+    private Graph(String title) {
         // Setup JFrame
         setTitle(title);
         setSize(SIZE, SIZE);
@@ -54,7 +54,7 @@ public class Graph extends JFrame {
         outBounds = true;
     }
 
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         // Draw axes
         if (currentX != 30) {
@@ -63,14 +63,14 @@ public class Graph extends JFrame {
         }
         g2.setColor(Color.BLUE);
         // System.out.println("x " + currentX + " y " + currentY); FOR TESTING.
-        if (inBounds() && !outBounds){
+        if (inBounds() && !outBounds) {
             path.quadTo(prevX, prevY, currentX, currentY);
             outBounds = false;
         } else if(inBounds()){
             path.moveTo(currentX, currentY);
         }
         outBounds = !inBounds();
-        if (currentX < SIZE - 30){
+        if (currentX < SIZE - 30) {
             repaint();
             run();
         } else {
@@ -78,14 +78,14 @@ public class Graph extends JFrame {
         }
     }
 
-    private boolean inBounds(){
+    private boolean inBounds() {
         return (currentX < SIZE - 30 && currentX > 30 && currentY > 30 && currentY < SIZE - 30);
     }
 
     /**
      * Calculates the co-ordinates of the graph at position x, y.
      */
-    private void run(){
+    private void run() {
         double eqnX = scaleBetween(currentX, domainMin, domainMax, 30, SIZE - 30);
         double eqnY = subNumbers(eqnX);
         // System.out.println("eqnX " + eqnX + " eqnY " + eqnY); FOR TESTING.
@@ -106,18 +106,15 @@ public class Graph extends JFrame {
      * @param x The number to be substituted into the equation
      * @return The 'y' co-ordinate
      */
-    private double subNumbers(double x){
+    private double subNumbers(double x) {
         Stack<String> eqn = new Stack<>();
-        String token;
-        double num1;
-        double num2;
+        double num1, num2;
         int[] aCount = {-1};
         ArrayList<Double> aList = new ArrayList<>();
-        for (int i = 0; i < postfix.length(); i++) {
-            token = postfix.substring(i, i+1);
+        for (String token : postfix.replaceAll("([^\\d.](?!$)|(\\d(?![\\d.])))", "$1,").split(",")) {
             if (s.fnc.containsKey(token)) {
                 num1 = checkNum(eqn, x, aCount, aList);
-                switch (token) { // FIGURE OUT THE ADD COMMA -> TO SEPARATE NUMBERS I.E. 23, 5 IN A STRING
+                switch (token) {
                     case "s":
                         aList.add(Math.sin(num1));
                         break;
@@ -201,7 +198,7 @@ public class Graph extends JFrame {
      * @param aList The list of constants
      * @return The new number
      */
-    private double checkNum(Stack<String> eqn, double x, int[] aCount, ArrayList<Double> aList){
+    private double checkNum(Stack<String> eqn, double x, int[] aCount, ArrayList<Double> aList) {
         String s = eqn.pop();
         switch (s) {
             case "x":
@@ -217,5 +214,4 @@ public class Graph extends JFrame {
                 return Double.parseDouble(s);
         }
     }
-
 }
